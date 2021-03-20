@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>Let's discover Canvas</title>
+    <style>
+        body {
+            /*overflow: hidden;*/
+            background-color: grey;
+        }
+    </style>
+    <script>
+        var taillex = 0;
+        function tracage(){
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            var ratio = window.devicePixelRatio;
+
+            canvas.width = width * ratio;
+            canvas.height = height * ratio;
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
+            context.scale(ratio, ratio);
+
+            ///Dessiner un Pentagone (5 côtés) 
+            var xstart = width / 2;
+            var ystart = height / 4;
+            taillex = document.getElementById("l_coté").value;
+            var angle = document.getElementById("nb_coté").value;
+
+            var taille = (angle*100/5)*taillex;
+
+            var trait1 = taille;
+            var trait2 = longueur_coté(angle);
+            var trait3 = taille*(1/angle);
+            var trait4 = longueur_coté(angle);
+
+
+            context.moveTo(xstart, ystart);
+            context.translate(xstart, ystart);
+            for(i=0;i<angle;i++){
+                context.lineTo(trait1, 0);////////-----------------
+
+                context.translate(trait1, 0);///////////A
+                context.rotate((2*Math.PI) / angle);
+
+                context.lineTo(trait2, 0);////////--------------------
+
+                context.translate(trait2, 0);//////////////B
+                context.rotate(-(angle-1)*Math.PI/angle);
+
+                context.lineTo(trait3, 0);////////------------------------
+
+                context.translate(trait3, 0);/////////C
+                context.rotate(-Math.PI/angle);
+
+                context.lineTo(trait4, 0);////////-------------------
+
+                context.rotate(Math.PI/angle);
+                context.translate(-trait3, 0);/////////////C
+
+                context.rotate((angle-1)*Math.PI/angle);
+                context.translate(-trait2, 0);//////////////B
+
+                context.rotate(-(2*Math.PI) / angle);
+                context.moveTo(-taille*(1/angle), 0);
+                context.translate(-taille*(1/angle), 0);////////////A
+
+                context.rotate((2*Math.PI) / angle);
+            }
+            context.strokeStyle = "#000";
+            context.lineWidth = 5;
+            context.stroke();
+        }
+        function longueur_coté(x){
+            return (24.4*x+75)/2*taillex
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" id="nb_coté" placeholder="Nombre De Côté" style="width: 200px; height: 25px;" value="5"><br>
+    <input type="text" id="l_coté" placeholder="Coefficient Multiplicateur" style="width: 200px; height: 25px;" value="2">
+    <button onclick="tracage()">Tracer</button><br>
+    
+    <canvas id="canvas" style="border: 0px solid black;"></canvas>
+
+</html>
